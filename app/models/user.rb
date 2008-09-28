@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
 
-  acts_as_authenticated_user
+  acts_as_authorized_user
 
   # Validations
   validates_presence_of :login, :if => :not_using_openid?
