@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
 
+  acts_as_authenticated_user
+
   # Validations
   validates_presence_of :login, :if => :not_using_openid?
   validates_length_of :login, :within => 3..40, :if => :not_using_openid?
@@ -20,8 +22,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :identity_url, :unless => :not_using_openid?
   validate :normalize_identity_url
   
-  # Relationships
-  has_and_belongs_to_many :roles
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
@@ -32,12 +32,6 @@ class User < ActiveRecord::Base
   def self.authenticate(login, password)
     u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
     u && u.authenticated?(password) ? u : nil
-  end
-  
-  # Check if a user has a role.
-  def has_role?(role)
-    list ||= self.roles.map(&:name)
-    list.include?(role.to_s) || list.include?('admin')
   end
   
   # Not using open id
