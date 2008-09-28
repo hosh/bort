@@ -62,6 +62,6 @@ Rails::Initializer.run do |config|
   # like if you have constraints or database-specific column types
   # config.active_record.schema_format = :sql
 
-  # Activate observers that should always be running
-  config.active_record.observers = :user_observer
+  # Activate observers that should always be running EXCEPT while running rake
+  config.active_record.observers = :user_observer  unless File.basename( $0 ) == "rake"
 end

@@ -6,3 +6,5 @@ doc/app
 coverage
 db/*.sqlite3
 *swp
+config/database.yml
+db/schema.rb
